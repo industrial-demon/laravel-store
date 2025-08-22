@@ -13,7 +13,8 @@ use Filament\Tables\Table;
 use App\Services\CountryService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\TextInput;
 class StateResource extends Resource
 {
     protected static ?string $model = State::class;
@@ -33,8 +34,9 @@ class StateResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('country_id')
-                    ->options(app(CountryService::class)->getCountries())
+                    ->relationship(name: 'country', titleAttribute: 'name')
                     ->native(false)
+                    ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -46,6 +48,9 @@ class StateResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->numeric()->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('country_id')
                     ->numeric()
                     ->sortable(),
@@ -61,7 +66,16 @@ class StateResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Filter::make('id')
+                    ->form([
+                        TextInput::make('id')
+                            ->numeric()
+                            ->label('State ID'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['id'], fn($q, $id) => $q->where('id', $id));
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

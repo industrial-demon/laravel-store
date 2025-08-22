@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -37,7 +38,7 @@ class EmployeeResource extends Resource
                     Forms\Components\TextInput::make('middle_name')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\DatePicker::make('birth_date')
+                    DatePicker::make('birth_date')->native(true)
                         ->required(),
                 ])->columns(2),
 
@@ -64,6 +65,7 @@ class EmployeeResource extends Resource
                     ->required()
                     ->numeric(),
                 Forms\Components\DatePicker::make('hired_date')
+                    ->native(false)
                     ->required(),
             ])->columns(3);
     }

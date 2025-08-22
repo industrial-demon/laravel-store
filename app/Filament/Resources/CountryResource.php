@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CountryResource extends Resource
 {
-    
+
     protected static ?string $model = Country::class;
 
     protected static ?string $modelLabel = 'Employee Country';
@@ -42,7 +42,12 @@ class CountryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->numeric()
+                    ->sortable(),
             ])
             ->filters([
                 //
